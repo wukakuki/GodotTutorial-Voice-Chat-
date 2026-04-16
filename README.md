@@ -38,12 +38,12 @@ and instantiate audio recorder scene, audio listener scene from EmbeddedVoiceCha
 
 Audio recorder scene is used to capture audio from `record_bus`, which should contain an Audio Effect Capture. You can add other audio effects on top of Audio Effect Capture to make the player sounds like in a special space.
 
-![Screenshot 2026-04-16 at 1.12.48 AM](/Users/siqiwu/Documents/godot tutorial/Screenshot 2026-04-16 at 1.12.48 AM.png)
+![RecorderBus](./RecorderBus.png)
 
 Audio listener scene is used to capture audio from `Master` bus, which should also contain an Audio Effect Capture. The audio data will be used for echo cancellation system. You can add other audio effects on top of Audio Effect Capture to make the player feels like in a special space.
 
-![Screenshot 2026-04-16 at 2.48.08 PM](/Users/siqiwu/Desktop/Screenshot 2026-04-16 at 2.48.08 PM.png)
+![MasterBus](./MasterBus.png)
 
 The player character also contains a `$AudioStreamPlayer3D`, which will be used to play the audio data from `$RPCGroup`. It should use Audio Stream Generator and be attached with a group node. 
 
-![Screenshot 2026-04-16 at 2.45.35 PM](/Users/siqiwu/Desktop/Screenshot 2026-04-16 at 2.45.35 PM.png)
+![AudioStreamPlayer3D](./AudioStreamPlayer3D.png)
