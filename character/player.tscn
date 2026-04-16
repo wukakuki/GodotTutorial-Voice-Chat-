@@ -1,0 +1,89 @@
+[gd_scene format=3 uid="uid://m45rqia10agy"]
+
+[ext_resource type="Script" uid="uid://f2pprxjwq5a2" path="res://addons/embedded_voice_chat/scripts/embedded_voice_chat_rpc_group.gd" id="1_bdyh8"]
+[ext_resource type="Script" uid="uid://b24hxax8d2f5y" path="res://character/player.gd" id="1_dkowc"]
+[ext_resource type="Script" uid="uid://54u40hka04nx" path="res://character/player_input.gd" id="2_monf5"]
+[ext_resource type="PackedScene" uid="uid://cbkg3csjdfce4" path="res://addons/embedded_voice_chat/scenes/embedded_voice_chat_audio_stream_recorder.tscn" id="2_pw6nv"]
+[ext_resource type="PackedScene" uid="uid://bd8qjepjqt4ex" path="res://addons/embedded_voice_chat/scenes/embedded_voice_chat_audio_listener_3d.tscn" id="3_tpic6"]
+[ext_resource type="Script" uid="uid://ctqexv0ujusxi" path="res://addons/embedded_voice_chat/scripts/embedded_voice_chat_audio3d.gd" id="5_tpic6"]
+[ext_resource type="Script" uid="uid://ba2xtlg786hjf" path="res://addons/embedded_voice_chat/scripts/embedded_voice_chat_group_connection_handler.gd" id="7_pw6nv"]
+[ext_resource type="Script" uid="uid://dflofwfvx7vho" path="res://addons/embedded_voice_chat/scripts/embedded_voice_chat_group_channel_handler.gd" id="8_tpic6"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_bfpf6"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_6ele1"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_monf5"]
+
+[sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_b6pse"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_6ele1"]
+properties/0/path = NodePath(".:player_id")
+properties/0/spawn = true
+properties/0/replication_mode = 0
+properties/1/path = NodePath(".:position")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:rotation")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("CollisionShape3D:rotation")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath("CameraPivot:rotation")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_monf5"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_2orxn"]
+properties/0/path = NodePath("PlayerInput:direction")
+properties/0/spawn = false
+properties/0/replication_mode = 1
+
+[node name="Player" type="CharacterBody3D" unique_id=1750483550 groups=["players"]]
+collision_layer = 2
+script = ExtResource("1_dkowc")
+audio_recorder_scene = ExtResource("2_pw6nv")
+audio_listener_3d_scene = ExtResource("3_tpic6")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=3594387]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_bfpf6")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CollisionShape3D" unique_id=1393244568]
+mesh = SubResource("CapsuleMesh_6ele1")
+
+[node name="Arrow" type="MeshInstance3D" parent="CollisionShape3D" unique_id=1450909986]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+mesh = SubResource("SphereMesh_monf5")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="CollisionShape3D" unique_id=319993231 node_paths=PackedStringArray("group_node")]
+stream = SubResource("AudioStreamGenerator_b6pse")
+autoplay = true
+area_mask = 0
+script = ExtResource("5_tpic6")
+group_node = NodePath("../../RPCGroup")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1790673046]
+replication_config = SubResource("SceneReplicationConfig_6ele1")
+
+[node name="CameraPivot" type="Marker3D" parent="." unique_id=1827270720]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraPivot" unique_id=1151887519]
+collision_mask = 3
+shape = SubResource("SphereShape3D_monf5")
+spring_length = 4.0
+margin = 1.0
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D" unique_id=100244742]
+
+[node name="PlayerInput" type="MultiplayerSynchronizer" parent="." unique_id=1019463874]
+replication_config = SubResource("SceneReplicationConfig_2orxn")
+script = ExtResource("2_monf5")
+
+[node name="RPCGroup" type="Node" parent="." unique_id=528804695]
+script = ExtResource("1_bdyh8")
+connection_handler_class = ExtResource("7_pw6nv")
+channel_handler_class = ExtResource("8_tpic6")

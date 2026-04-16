@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://caj7b0hy6cxs2"]
+
+[ext_resource type="Script" uid="uid://dl57glnrkdkvf" path="res://scenes/level.gd" id="1_2q6dc"]
+[ext_resource type="PackedScene" uid="uid://m45rqia10agy" path="res://character/player.tscn" id="2_w7c3h"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rd3vj"]
+size = Vector3(10, 0.1, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2q6dc"]
+size = Vector3(10, 0.1, 10)
+
+[node name="Node3D" type="Node3D" unique_id=2003703385]
+script = ExtResource("1_2q6dc")
+player_scene = ExtResource("2_w7c3h")
+
+[node name="Floor" type="StaticBody3D" parent="." unique_id=1910337869]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, 0)
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor" unique_id=1240512196]
+shape = SubResource("BoxShape3D_rd3vj")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor" unique_id=1593325874]
+mesh = SubResource("BoxMesh_2q6dc")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=441390760]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 10, 0)
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=288879776]
+_spawnable_scenes = PackedStringArray("uid://m45rqia10agy")
+spawn_path = NodePath("../Players")
+
+[node name="Players" type="Node" parent="." unique_id=16277786]

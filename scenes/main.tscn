@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://dath6nd6287bx"]
+
+[ext_resource type="Script" uid="uid://bcbrxdg26davu" path="res://scenes/main.gd" id="1_o5qli"]
+[ext_resource type="PackedScene" uid="uid://caj7b0hy6cxs2" path="res://scenes/level.tscn" id="2_0wfyh"]
+
+[node name="Main" type="Node3D" unique_id=1489052608]
+script = ExtResource("1_o5qli")
+default_server_map = ExtResource("2_0wfyh")
+server_ip_address = "192.168.88.150"
+server_port = 7777
+
+[node name="Level" type="Node3D" parent="." unique_id=91129953]
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=43609417]
+_spawnable_scenes = PackedStringArray("uid://caj7b0hy6cxs2")
+spawn_path = NodePath("../Level")
