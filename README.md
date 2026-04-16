@@ -1,4 +1,11 @@
 # Godot Example project for Voice Chat Plugin
+
+### Install Plugin
+
+create an `addons` folder and add the plugin folder inside it.
+
+### Example Project
+
 The main scene is `scenes/main.tscn `. It works as a root. Level scenes will be loaded in `$Level` and `$MultiplayerSpawner` will sync the level scenes to clients.
 
 The default scene is `scenes/level.tscn`. Player scene will be loaded in `$Players` and `$MultiplayerSpawner` will sync the Player scenes to clients. Each player will be assigned with a player id which equals his multiplayer unique id.
