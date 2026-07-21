@@ -1,0 +1,248 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: awsTutorial(GameLift part)
+Parameters:
+  ResourceNamePrefix:
+    Description: Prefix of resource name
+    Default: awstutorial
+    Type: String
+  GameServerBuildBucket:
+    Description: S3 bucket for storing game server build files.
+    Type: String
+  GameServerBuildKey:
+    Description: The key of the game server build file.
+    Type: String
+  GameServerBuildObjectVersion:
+    Description: The version of the game server build file.
+    Type: String
+  GameServerBuildServerSdkVersion:
+    Description: The server sdk version of the game server build file.
+    Type: String
+  GameServerBuildVersion:
+    Description: Version of the game server build.
+    Type: String
+  GameServerLaunchPath:
+    Description: The launch path of the game server.
+    Type: String
+    Default: 'testGodot.arm64'
+  PrometheusWorkspaceArn:
+    Description: The Arn of the Prometheus workspace.
+    Type: String
+Conditions:
+  UsePrometheus: !Not
+    - !Equals
+      - !Ref PrometheusWorkspaceArn
+      - ''
+Resources:
+  awsTutorialGameLiftRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Join
+        - ''
+        - - !Ref ResourceNamePrefix
+          - _GameLift_Role
+      Description: Role for AWS GameLift service
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - gamelift.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: !Join
+            - ''
+            - - !Ref ResourceNamePrefix
+              - _GameLift_Policy
+          PolicyDocument:
+            Statement:
+              - Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                Effect: Allow
+                Resource: !Join
+                  - ''
+                  - - 'arn:aws:s3:::'
+                    - !Ref GameServerBuildBucket
+                    - /*
+      Tags:
+        - Key: Usage
+          Value: Youtube Streamer
+  awsTutorialBuild:
+    Type: AWS::GameLift::Build
+    Properties:
+      Name: !Join
+        - ''
+        - - !Ref ResourceNamePrefix
+          - _Build
+      OperatingSystem: AMAZON_LINUX_2023
+      ServerSdkVersion: !Ref GameServerBuildServerSdkVersion
+      StorageLocation:
+        Bucket: !Ref GameServerBuildBucket
+        Key: !Ref GameServerBuildKey
+        ObjectVersion: !Ref GameServerBuildObjectVersion
+        RoleArn: !GetAtt awsTutorialGameLiftRole.Arn
+      Version: !Ref GameServerBuildVersion
+  awsTutorialGameLiftFleetInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+# can't use _ in fleet instance role name. role name regex: [a-zA-Z0-9:/-]+
+      RoleName: !Join
+        - ''
+        - - !Ref ResourceNamePrefix
+          - -GameLift-FleetInstance-Role
+      Description: Role for AWS GameLift service fleet instance
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - gamelift.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/GameLiftContainerFleetPolicy
+      Tags:
+        - Key: Usage
+          Value: Youtube Streamer
+  awsTutorialTelemetryMetricsPolicy:
+    Type: AWS::IAM::RolePolicy
+    Condition: UsePrometheus
+    Properties:
+      PolicyName: !Join
+        - ''
+        -   - !Ref ResourceNamePrefix
+            - _GameLift_TelemetryMetrics_FleetInstance_Policy
+      RoleName: !Ref awsTutorialGameLiftFleetInstanceRole
+      PolicyDocument:
+        Statement:
+          -   Effect: Allow
+              Action:
+                - aps:RemoteWrite
+              Resource: !Ref PrometheusWorkspaceArn
+          -   Effect: Allow
+              Action:
+                - logs:PutLogEvents
+                - logs:CreateLogStream
+                - logs:CreateLogGroup
+                - logs:PutRetentionPolicy
+              Resource: !Sub 'arn:aws:logs:*:${AWS::AccountId}:log-group:*:log-stream:*'
+  awsTutorialFleet:
+    Type: AWS::GameLift::Fleet
+    Properties:
+      Name: !Join
+        - ''
+        - - !Ref ResourceNamePrefix
+          - _Fleet
+      Description: awsTutorial Fleet
+      BuildId: !Ref awsTutorialBuild
+      CertificateConfiguration:
+        CertificateType: GENERATED
+      ComputeType: EC2
+      DesiredEC2Instances: 1
+      EC2InboundPermissions:
+        - FromPort: 7777
+          ToPort: 7780
+          IpRange: 0.0.0.0/0
+          Protocol: UDP
+      EC2InstanceType: c6g.medium
+      FleetType: SPOT
+      InstanceRoleARN: !GetAtt awsTutorialGameLiftFleetInstanceRole.Arn
+      InstanceRoleCredentialsProvider: SHARED_CREDENTIAL_FILE
+      Locations:
+        - Location: !Ref AWS::Region
+          LocationCapacity:
+            DesiredEC2Instances: 1
+            MaxSize: 1
+            MinSize: 0
+#        - Location: us-east-1
+#          LocationCapacity:
+#            DesiredEC2Instances: 0
+#            MaxSize: 0
+#            MinSize: 0
+      MaxSize: 1
+      MinSize: 0
+      NewGameSessionProtectionPolicy: FullProtection
+      ResourceCreationLimitPolicy:
+        NewGameSessionsPerCreator: 1
+        PolicyPeriodInMinutes: 3
+      RuntimeConfiguration:
+        GameSessionActivationTimeoutSeconds: 300
+        MaxConcurrentGameSessionActivations: 2
+        ServerProcesses:
+          - ConcurrentExecutions: 4
+            LaunchPath: !Join
+              - ''
+              - - /local/game/
+                - !Ref GameServerLaunchPath
+  awsTutorialAlias:
+    Type: AWS::GameLift::Alias
+    Properties:
+      Name: !Join
+        - ''
+        - - !Ref ResourceNamePrefix
+          - _Alias
+      Description: awsTutorial Alias
+      RoutingStrategy:
+        FleetId: !Ref awsTutorialFleet
+        Type: SIMPLE
+  awsTutorialGameSessionQueue:
+    Type: AWS::GameLift::GameSessionQueue
+    Properties:
+      Name: !Join
+        - ''
+        - - !Ref ResourceNamePrefix
+          - -Queue
+      Destinations:
+        - DestinationArn: !Sub "arn:aws:gamelift:${AWS::Region}:${AWS::AccountId}:alias/${awsTutorialAlias}"
+      PlayerLatencyPolicies:
+        - MaximumIndividualPlayerLatencyMilliseconds: 500
+          PolicyDurationSeconds: 30
+      PriorityConfiguration:
+        PriorityOrder: 
+          - LATENCY
+          - COST
+      TimeoutInSeconds: 60
+      Tags:
+        - Key: Usage
+          Value: Youtube Streamer
+Metadata:
+  AWS::Composer::Groups:
+    Group1:
+      Label: GameLift
+      Members:
+        - awsTutorialGameLiftRole
+        - awsTutorialFleet
+        - awsTutorialAlias
+Outputs:
+  awsTutorialFleetInstanceRoleName:
+    Description: GameLift Fleet Instance Role Name
+    Value: !Ref awsTutorialGameLiftFleetInstanceRole
+    Export:
+      Name: !Sub 'awsTutorialFleetInstanceRoleName'
+  awsTutorialFleetInstanceRoleArn:
+    Description: GameLift Fleet Instance Role Arn
+    Value: !GetAtt awsTutorialGameLiftFleetInstanceRole.Arn
+    Export:
+      Name: !Sub 'awsTutorialFleetInstanceRoleArn'
+  awsTutorialFleetId:
+    Description: GameLift Fleet ID
+    Value: !Ref awsTutorialFleet
+    Export:
+      Name: !Sub 'awsTutorialFleetId'
+  awsTutorialAliasId:
+    Description: GameLift Alias ID
+    Value: !Ref awsTutorialAlias
+    Export:
+      Name: !Sub 'awsTutorialAlias'
+  awsTutorialGameSessionQueueName:
+    Description: GameLift Game Session Queue Name
+    Value: !GetAtt awsTutorialGameSessionQueue.Name
+    Export:
+      Name: !Sub 'awsTutorialGameSessionQueueName'
+  awsTutorialGameSessionQueueArn:
+    Description: GameLift Game Session Queue Arn
+    Value: !GetAtt awsTutorialGameSessionQueue.Arn
+    Export:
+      Name: !Sub 'awsTutorialGameSessionQueueArn'

@@ -6,8 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://cbkg3csjdfce4" path="res://addons/embedded_voice_chat/scenes/embedded_voice_chat_audio_stream_recorder.tscn" id="2_pw6nv"]
 [ext_resource type="PackedScene" uid="uid://bd8qjepjqt4ex" path="res://addons/embedded_voice_chat/scenes/embedded_voice_chat_audio_listener_3d.tscn" id="3_tpic6"]
 [ext_resource type="Script" uid="uid://ctqexv0ujusxi" path="res://addons/embedded_voice_chat/scripts/embedded_voice_chat_audio3d.gd" id="5_tpic6"]
-[ext_resource type="Script" uid="uid://ba2xtlg786hjf" path="res://addons/embedded_voice_chat/scripts/embedded_voice_chat_group_connection_handler.gd" id="7_pw6nv"]
-[ext_resource type="Script" uid="uid://dflofwfvx7vho" path="res://addons/embedded_voice_chat/scripts/embedded_voice_chat_group_channel_handler.gd" id="8_tpic6"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_bfpf6"]
 
@@ -85,5 +83,3 @@ script = ExtResource("2_monf5")
 
 [node name="RPCGroup" type="Node" parent="." unique_id=528804695]
 script = ExtResource("1_bdyh8")
-connection_handler_class = ExtResource("7_pw6nv")
-channel_handler_class = ExtResource("8_tpic6")

@@ -1,6 +1,14 @@
 class_name Player
 extends CharacterBody3D
 
+
+var game_instance: GameInstance = null
+
+
+func _init():
+	game_instance = GameInstance.singleton
+
+
 const SPEED = 5.0
 const TURN_SPEED = 30
 const JUMP_VELOCITY = 4.5
@@ -23,27 +31,59 @@ var is_local_player: bool = false
 		player_id = id
 		$PlayerInput.set_multiplayer_authority(player_id)
 		$RPCGroup.owning_client_id = player_id
+		
+var master_low_pass_filter: AudioEffectLowPassFilter
+var master_reverb: AudioEffectReverb
+var master_phaser: AudioEffectPhaser
+var record_low_pass_filter: AudioEffectLowPassFilter
+var record_reverb: AudioEffectReverb
+var record_phaser: AudioEffectPhaser
+
 
 func _ready():
 	if player_id == -1:
-		print("didn't receive player id")
+		game_instance.notification.emit(game_instance.NotificationLevel.Error, "didn't receive player id")
 		queue_free()
 		return
 		
 	is_local_player = (player_id == multiplayer.get_unique_id())
-	print("player %d ready" % player_id)
+	game_instance.notification.emit(game_instance.NotificationLevel.Verbose, "player %d ready" % player_id)
 	if is_local_player:
 		$RPCGroup.join_group("Default")
 		audio_recorder = audio_recorder_scene.instantiate()
 		audio_recorder.bus = record_bus
-		# to debug audio, enable below line, it will generate a pcm file for Post-mortem Debugging
+		# to debug audio, enable below line
+		# it will generate a pcm file for Post-mortem Debugging
 		#audio_recorder.debug_audio = true
 		$CollisionShape3D/MeshInstance3D.add_child(audio_recorder)
 		audio_listener = audio_listener_3d_scene.instantiate()
-		# to debug audio, enable below line, it will generate a pcm file for Post-mortem Debugging
+		# to debug audio, enable below line
+		# it will generate a pcm file for Post-mortem Debugging
 		#audio_listener.debug_audio = true
 		$CameraPivot/SpringArm3D/Camera3D.add_child(audio_listener)
 		audio_listener.make_current()
+		
+		master_low_pass_filter = AudioEffectLowPassFilter.new()
+		master_reverb = AudioEffectReverb.new()
+		master_phaser = AudioEffectPhaser.new()
+		
+		master_low_pass_filter.cutoff_hz = 500
+		master_reverb.predelay_msec = 20
+		master_reverb.room_size = 0.2
+		master_reverb.damping = 0.2
+		master_phaser.rate_hz = 0.1
+		master_phaser.depth = 0.2
+		
+		record_low_pass_filter = AudioEffectLowPassFilter.new()
+		record_reverb = AudioEffectReverb.new()
+		record_phaser = AudioEffectPhaser.new()
+		
+		record_low_pass_filter.cutoff_hz = 500
+		record_reverb.predelay_msec = 20
+		record_reverb.room_size = 0.2
+		record_reverb.damping = 0.2
+		record_phaser.rate_hz = 0.1
+		record_phaser.depth = 0.2
 		
 	# only update physics on server side
 	set_physics_process(multiplayer.get_unique_id() == 1)
@@ -94,3 +134,50 @@ func _physics_process(delta):
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 
 	move_and_slide()
+	
+func enter_water():
+	if is_local_player:
+		var master_bus_idx = AudioServer.get_bus_index("Master")
+		if master_bus_idx == -1:
+			game_instance.notification.emit(game_instance.NotificationLevel.Error, "there is no Master bus")
+			return
+			
+		AudioServer.add_bus_effect(master_bus_idx, master_phaser, 0)
+		AudioServer.add_bus_effect(master_bus_idx, master_reverb, 0)
+		AudioServer.add_bus_effect(master_bus_idx, master_low_pass_filter, 0)
+		
+		var record_bus_idx = AudioServer.get_bus_index("Record")
+		if record_bus_idx == -1:
+			game_instance.notification.emit(game_instance.NotificationLevel.Error, "there is no Master bus")
+			return
+			
+		AudioServer.add_bus_effect(record_bus_idx, record_phaser, 0)
+		AudioServer.add_bus_effect(record_bus_idx, record_reverb, 0)
+		AudioServer.add_bus_effect(record_bus_idx, record_low_pass_filter, 0)
+		
+	
+func exit_water():
+	if is_local_player:
+		var master_bus_idx = AudioServer.get_bus_index("Master")
+		if master_bus_idx == -1:
+			game_instance.notification.emit(game_instance.NotificationLevel.Error, "there is no Master bus")
+			return
+			
+		remove_audio_effect(master_bus_idx, master_phaser)
+		remove_audio_effect(master_bus_idx, master_reverb)
+		remove_audio_effect(master_bus_idx, master_low_pass_filter)
+		
+		var record_bus_idx = AudioServer.get_bus_index("Record")
+		if record_bus_idx == -1:
+			game_instance.notification.emit(game_instance.NotificationLevel.Error, "there is no Master bus")
+			return
+			
+		remove_audio_effect(record_bus_idx, master_phaser)
+		remove_audio_effect(record_bus_idx, master_reverb)
+		remove_audio_effect(record_bus_idx, master_low_pass_filter)
+		
+func remove_audio_effect(bus_idx: int, audio_effect: AudioEffect):
+	var effect_count = AudioServer.get_bus_effect_count(bus_idx)
+	for i in range(effect_count - 1, -1, -1):
+		if AudioServer.get_bus_effect(bus_idx, i) == audio_effect:
+			AudioServer.remove_bus_effect(bus_idx, i)

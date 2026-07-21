@@ -17,11 +17,21 @@ func _ready():
 	set_process(is_local_player)
 
 func _process(_delta):
-	direction = Input.get_vector("move_leftward", "move_rightward", "move_forward", "move_backward")
+	direction = Input.get_vector(
+		"move_leftward", 
+		"move_rightward", 
+		"move_forward", 
+		"move_backward"
+		)
 	if Input.is_action_just_pressed("jump"):
 		jump.rpc()
 		
-	var temp_look_direction: Vector2 = Input.get_vector("look_left", "look_right", "look_up", "look_down")
+	var temp_look_direction: Vector2 = Input.get_vector(
+		"look_left", 
+		"look_right", 
+		"look_up", 
+		"look_down"
+		)
 		
 	if temp_look_direction.length() > 0.1:
 		look.rpc(Vector2(
@@ -29,7 +39,6 @@ func _process(_delta):
 			-temp_look_direction.x * joystick_sensitivity
 			))
 		
-	
 func _input(event):
 	if not is_local_player:
 		return

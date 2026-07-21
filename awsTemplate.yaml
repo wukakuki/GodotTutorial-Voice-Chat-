@@ -1,0 +1,135 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: awsTutorial(main)
+Parameters:
+    ResourceNamePrefix:
+        Description: Prefix of resource name
+        Default: awstutorial
+        Type: String
+    UGCPartTemplateUrl:
+        Description: Url of the cloud formation template for cognito, cloudwatch
+            log  group, S3 resources.
+        Type: String
+        Default: https://aws-plugin-public-resource.s3.ap-northeast-2.amazonaws.com/godot+cloudformation+templates/awsTemplate_UGC.yaml
+    DeployGameServer:
+        Description: Deploy gameserver to gamelift?
+        Type: String
+        Default: 'false'
+        AllowedValues:
+            - 'true'
+            - 'localtest'
+            - 'false'
+    PrometheusWorkspaceArn:
+        Description: The Arn of the Prometheus workspace.
+        Type: String
+    GameLiftPartTemplateUrl:
+        Description: Url of the cloud formation template for gamelift resources.
+        Type: String
+        Default: https://aws-plugin-public-resource.s3.ap-northeast-2.amazonaws.com/godot+cloudformation+templates/awsTemplate_GameLift.yaml
+    GameServerBuildBucket:
+        Description: S3 bucket for storing game server build files.
+        Type: String
+        Default: awstutorial-builds-ap-northeast-2
+    GameServerBuildKey:
+        Description: The key of the game server build file.
+        Type: String
+        Default: LinuxArm64Server.zip
+    GameServerBuildObjectVersion:
+        Description: The version of the game server build file.
+        Type: String
+        Default: B7rdibd3ZIuq_arlKtnjGPzJovGDZ2DN
+    GameServerBuildServerSdkVersion:
+        Description: The server sdk version of the game server build file.
+        Type: String
+        Default: 5.4.0
+    GameServerBuildVersion:
+        Description: Version of the game server build.
+        Type: String
+        Default: 1.0.0
+    GameServerLaunchPath:
+        Description: The launch path of the game server.
+        Type: String
+        Default: testGodot.arm64
+    GameLiftLocalTestPartTemplateUrl:
+        Description: Url of the cloud formation template for gamelift local test resources.
+        Type: String
+        Default: https://aws-plugin-public-resource.s3.ap-northeast-2.amazonaws.com/godot+cloudformation+templates/awsTemplate_GameLift_LocalTest.yaml
+Conditions:
+    ShouldDeployGameServer: !Equals
+        - !Ref DeployGameServer
+        - 'true'
+    ShouldDeployGameServerLocalTest: !Equals
+        - !Ref DeployGameServer
+        - 'localtest'
+Resources:
+    awsTutorialUGCStack:
+        Type: AWS::CloudFormation::Stack
+        Properties:
+            TemplateURL: !Ref UGCPartTemplateUrl
+            Parameters:
+                ResourceNamePrefix: !Ref ResourceNamePrefix
+            Tags:
+                -   Key: Usage
+                    Value: Youtube Streamer
+    awsTutorialGameLiftStack:
+        Type: AWS::CloudFormation::Stack
+        Condition: ShouldDeployGameServer
+        Properties:
+            TemplateURL: !Ref GameLiftPartTemplateUrl
+            Parameters:
+                ResourceNamePrefix: !Ref ResourceNamePrefix
+                GameServerBuildBucket: !Ref GameServerBuildBucket
+                GameServerBuildKey: !Ref GameServerBuildKey
+                GameServerBuildObjectVersion: !Ref GameServerBuildObjectVersion
+                GameServerBuildServerSdkVersion: !Ref GameServerBuildServerSdkVersion
+                GameServerBuildVersion: !Ref GameServerBuildVersion
+                GameServerLaunchPath: !Ref GameServerLaunchPath
+                PrometheusWorkspaceArn: !Ref PrometheusWorkspaceArn
+            Tags:
+                -   Key: Usage
+                    Value: Youtube Streamer
+    awsTutorialGameLiftLocalTestStack:
+        Type: AWS::CloudFormation::Stack
+        Condition: ShouldDeployGameServerLocalTest
+        Properties:
+            TemplateURL: !Ref GameLiftLocalTestPartTemplateUrl
+            Parameters:
+                ResourceNamePrefix: !Ref ResourceNamePrefix
+            Tags:
+                -   Key: Usage
+                    Value: Youtube Streamer
+Outputs:
+    awsTutorialRegion:
+        Description: AWS Region
+        Value: !Ref AWS::Region
+    awsTutorialCognitoIdentityPoolId:
+        Description: Cognito Identity Pool ID
+        Value: !GetAtt awsTutorialUGCStack.Outputs.awsTutorialCognitoIdentityPoolId
+    awsTutorialCognitoUserPoolId:
+        Description: Cognito User Pool ID
+        Value: !GetAtt awsTutorialUGCStack.Outputs.awsTutorialCognitoUserPoolId
+    awsTutorialCognitoUserPoolClient:
+        Description: Link to Cognito User Pool Client, copy client secret from this page
+        Value: !Sub "https://${AWS::Region}.console.aws.amazon.com/cognito/v2/idp/user-pools/${awsTutorialUGCStack.Outputs.awsTutorialCognitoUserPoolId}/applications/app-clients/${awsTutorialUGCStack.Outputs.awsTutorialCognitoUserPoolClientId}/quick-setup-guide?region=${AWS::Region}"
+    awsTutorialCognitoUserPoolClientDomain:
+        Description: Cognito User Pool Client domain
+        Value: !GetAtt awsTutorialUGCStack.Outputs.awsTutorialUserPoolDomain
+    awsTutorialCognitoUserPoolClientId:
+        Description: Cognito User Pool Client ID
+        Value: !GetAtt awsTutorialUGCStack.Outputs.awsTutorialCognitoUserPoolClientId
+    awsTutorialAliasId:
+        Condition: ShouldDeployGameServer
+        Description: GameLift Alias ID
+        Value: !GetAtt awsTutorialGameLiftStack.Outputs.awsTutorialAliasId
+    awsTutorialGameSessionQueueName:
+        Condition: ShouldDeployGameServer
+        Description: GameLift Game Session Queue Name
+        Value: !GetAtt awsTutorialGameLiftStack.Outputs.awsTutorialGameSessionQueueName
+    awsTutorialLocalTestAliasId:
+        Condition: ShouldDeployGameServerLocalTest
+        Description: GameLift Local Test Alias ID
+        Value: !GetAtt awsTutorialGameLiftLocalTestStack.Outputs.awsTutorialAliasId
+    awsTutorialLocalTestFleetId:
+        Condition: ShouldDeployGameServerLocalTest
+        Description: GameLift Local Test Fleet ID
+        Value: !GetAtt awsTutorialGameLiftLocalTestStack.Outputs.awsTutorialFleetId

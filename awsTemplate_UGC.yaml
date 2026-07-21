@@ -1,0 +1,240 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: awsTutorial(Account and user generated content part)
+Parameters:
+  ResourceNamePrefix:
+    Description: Prefix of resource name
+    Default: awstutorial
+    Type: String
+Resources:
+  awsTutorialCognitoAuthRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Join
+        - ''
+        - - !Ref ResourceNamePrefix
+          - _Cognito_Auth_Role
+      Description: Role for AWS Cognito Identity Auth
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: cognito-identity.amazonaws.com
+            Action:
+              - sts:AssumeRoleWithWebIdentity
+              - sts:TagSession
+            Condition:
+              StringEquals:
+                cognito-identity.amazonaws.com:aud: !Ref awsTutorialCognitoIdentityPool
+              ForAnyValue:StringLike:
+                cognito-identity.amazonaws.com:amr: authenticated
+      Policies:
+        - PolicyName: !Join
+            - ''
+            - - !Ref ResourceNamePrefix
+              - _Cognito_Auth_Policy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: GameLiftBasic
+                Effect: Allow
+                Action:
+                  # overly permissive
+                  - gamelift:SearchGameSessions
+                  - gamelift:CreateGameSession
+                  - gamelift:CreatePlayerSession
+                Resource: '*'
+      Tags:
+        - Key: Usage
+          Value: Youtube Streamer
+  awsTutorialCognitoUnauthRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Join
+        - ''
+        - - !Ref ResourceNamePrefix
+          - _Cognito_Unauth_Role
+      Description: Role for AWS Cognito Identity Unauth
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Federated: cognito-identity.amazonaws.com
+            Action:
+              - sts:AssumeRoleWithWebIdentity
+              - sts:TagSession
+            Condition:
+              StringEquals:
+                cognito-identity.amazonaws.com:aud: !Ref awsTutorialCognitoIdentityPool
+              ForAnyValue:StringLike:
+                cognito-identity.amazonaws.com:amr: unauthenticated
+      Policies:
+        - PolicyName: !Join
+            - ''
+            - - !Ref ResourceNamePrefix
+              - _Cognito_Unauth_Policy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: DenyAll
+                Effect: Deny
+                Action: '*'
+                Resource: '*'
+      Tags:
+        - Key: Usage
+          Value: Youtube Streamer
+  awsTutorialCognitoIdentityPool:
+    Type: AWS::Cognito::IdentityPool
+    Properties:
+      IdentityPoolName: !Join
+        - ''
+        - - !Ref ResourceNamePrefix
+          - _Cognito_Identity_Pool
+      AllowUnauthenticatedIdentities: true
+      CognitoIdentityProviders:
+        - ClientId: !Ref awsTutorialCognitoUserPoolClient
+          ProviderName: !GetAtt awsTutorialCognitoUserPool.ProviderName
+          ServerSideTokenCheck: true
+  awsTutorialCognitoIdentityPoolRoleAttachment:
+    Type: AWS::Cognito::IdentityPoolRoleAttachment
+    Properties:
+      IdentityPoolId: !Ref awsTutorialCognitoIdentityPool
+      Roles:
+        unauthenticated: !GetAtt awsTutorialCognitoUnauthRole.Arn
+        authenticated: !GetAtt awsTutorialCognitoAuthRole.Arn
+  awsTutorialCognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: !Join
+        - ''
+        - - !Ref ResourceNamePrefix
+          - _Cognito_User_Pool
+      AccountRecoverySetting:
+        RecoveryMechanisms:
+          - Name: verified_email
+            Priority: 1
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: false
+      AliasAttributes:
+        - email
+        - preferred_username
+      AutoVerifiedAttributes:
+        - email
+      DeletionProtection: INACTIVE
+      EmailConfiguration:
+        EmailSendingAccount: COGNITO_DEFAULT
+      EnabledMfas:
+        - SOFTWARE_TOKEN_MFA
+      MfaConfiguration: OPTIONAL
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: true
+          RequireUppercase: true
+      Schema:
+        - Name: avatar
+          AttributeDataType: String
+          Mutable: true
+          Required: false
+      UserAttributeUpdateSettings:
+        AttributesRequireVerificationBeforeUpdate:
+          - email
+      UsernameConfiguration:
+        CaseSensitive: true
+      UserPoolAddOns:
+        AdvancedSecurityMode: 'OFF'
+      UserPoolTags:
+        Usage: Youtube Streamer
+      VerificationMessageTemplate:
+        DefaultEmailOption: CONFIRM_WITH_CODE
+  awsTutorialCognitoUserPoolDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      Domain: !Select
+        - 2
+        - !Split
+          - '/'
+          - !Ref AWS::StackId
+      UserPoolId: !Ref awsTutorialCognitoUserPool
+  awsTutorialCognitoUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: !Join
+        - ''
+        - - !Ref ResourceNamePrefix
+          - _Cognito_User_Pool_Client
+      AccessTokenValidity: 60
+      IdTokenValidity: 60
+      RefreshTokenValidity: 30
+      TokenValidityUnits:
+        AccessToken: minutes
+        IdToken: minutes
+        RefreshToken: days
+      AllowedOAuthFlows:
+        - client_credentials
+      AllowedOAuthFlowsUserPoolClient: false
+      AuthSessionValidity: 3
+      EnablePropagateAdditionalUserContextData: false
+      EnableTokenRevocation: true
+      ExplicitAuthFlows:
+        - ALLOW_USER_SRP_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+      GenerateSecret: true
+      PreventUserExistenceErrors: ENABLED
+      SupportedIdentityProviders:
+        - COGNITO
+      ReadAttributes:
+        - preferred_username
+        - email
+        - email_verified
+        - custom:avatar
+      WriteAttributes:
+        - email
+        - preferred_username
+        - custom:avatar
+      UserPoolId: !Ref awsTutorialCognitoUserPool
+Metadata:
+  AWS::Composer::Groups:
+    Group1:
+      Label: Cognito
+      Members:
+        - awsTutorialCognitoIdentityPool
+        - awsTutorialCognitoUserPool
+        - awsTutorialCognitoUserPoolClient
+Outputs:
+  awsTutorialCognitoIdentityPoolId:
+    Description: Cognito Identity Pool ID
+    Value: !Ref awsTutorialCognitoIdentityPool
+    Export:
+      Name: !Sub awsTutorialCognitoIdentityPoolId
+  awsTutorialCognitoUserPoolId:
+    Description: Cognito User Pool ID
+    Value: !Ref awsTutorialCognitoUserPool
+    Export:
+      Name: !Sub awsTutorialCognitoUserPoolId
+  awsTutorialCognitoUserPoolArn:
+    Description: Cognito User Pool Arn
+    Value: !GetAtt awsTutorialCognitoUserPool.Arn
+    Export:
+      Name: !Sub awsTutorialCognitoUserPoolArn
+  awsTutorialCognitoUserPoolClientId:
+    Description: Cognito User Pool Client ID
+    Value: !Ref awsTutorialCognitoUserPoolClient
+    Export:
+      Name: !Sub awsTutorialCognitoUserPoolClientId
+  awsTutorialUserPoolDomain:
+    Description: User Pool Domain
+    Value: !Join
+      - ''
+      - - !Select
+          - 2
+          - !Split
+            - '/'
+            - !Ref AWS::StackId
+        - !Sub '.auth.${AWS::Region}.amazoncognito.com'
+    Export:
+      Name: !Sub awsTutorialUserPoolDomain

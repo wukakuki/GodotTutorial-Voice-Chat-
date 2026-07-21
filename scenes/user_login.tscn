@@ -1,0 +1,581 @@
+[gd_scene format=3 uid="uid://bw0gf1ep3d1cf"]
+
+[ext_resource type="Script" uid="uid://c2wbvjw1q7o2a" path="res://scenes/user_login.gd" id="1_hkjhb"]
+[ext_resource type="Texture2D" uid="uid://bbaiimuareuro" path="res://resources/textures/visible.png" id="1_ltha6"]
+[ext_resource type="Shader" uid="uid://dc33w1b8bvps1" path="res://resources/shader/change_icon_color.gdshader" id="1_yyolg"]
+[ext_resource type="Texture2D" uid="uid://wydbkar2hmch" path="res://resources/textures/invisible.png" id="2_42sg8"]
+[ext_resource type="Texture2D" uid="uid://cg04spj55fvdx" path="res://resources/textures/icons8-back-96-2.png" id="4_ac4cj"]
+[ext_resource type="Script" uid="uid://dg5db1ijpxv40" path="res://scenes/error_display.gd" id="6_mqrdc"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ac4cj"]
+shader = ExtResource("1_yyolg")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yyolg"]
+shader = ExtResource("1_yyolg")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hkjhb"]
+shader = ExtResource("1_yyolg")
+
+[node name="Control" type="Control" unique_id=1270316942 node_paths=PackedStringArray("tab_container", "login_username", "login_password", "login_password_switch", "login_confirm", "sign_up_username", "sign_up_password", "sign_up_password_switch", "sign_up_email", "sign_up_confirm", "confirm_sign_up_code", "confirm_sign_up_confirm", "forgot_password_username", "forgot_password_confirm", "confirm_forgot_password_code", "confirm_forgot_password_password", "confirm_forgot_password_visibility_switch", "confirm_forgot_password_confirm", "mfa_code", "mfa_confirm")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hkjhb")
+tab_container = NodePath("VBoxContainer/TabContainer")
+login_username = NodePath("VBoxContainer/TabContainer/LoginPanel/MarginContainer2/VBoxContainer/HBoxContainer/LoginPanel_Username_Input")
+login_password = NodePath("VBoxContainer/TabContainer/LoginPanel/MarginContainer2/VBoxContainer/HBoxContainer2/LoginPanel_Password_Input")
+login_password_switch = NodePath("VBoxContainer/TabContainer/LoginPanel/MarginContainer2/VBoxContainer/HBoxContainer2/LoginPanel_Password_Visibility_Switch")
+login_confirm = NodePath("VBoxContainer/TabContainer/LoginPanel/MarginContainer/LoginPanel_Login")
+sign_up_username = NodePath("VBoxContainer/TabContainer/SignUpPanel/MarginContainer2/VBoxContainer/HBoxContainer/SignUpPanel_Username_Input")
+sign_up_password = NodePath("VBoxContainer/TabContainer/SignUpPanel/MarginContainer2/VBoxContainer/HBoxContainer2/SignUpPanel_Password_Input")
+sign_up_password_switch = NodePath("VBoxContainer/TabContainer/SignUpPanel/MarginContainer2/VBoxContainer/HBoxContainer2/SignUpPanel_Password_Visibility_Switch")
+sign_up_email = NodePath("VBoxContainer/TabContainer/SignUpPanel/MarginContainer2/VBoxContainer/HBoxContainer3/SignUpPanel_Email_Input")
+sign_up_confirm = NodePath("VBoxContainer/TabContainer/SignUpPanel/MarginContainer/SignUpPanel_SignUp")
+confirm_sign_up_code = NodePath("VBoxContainer/TabContainer/ConfirmSignUpPanel/MarginContainer2/VBoxContainer/HBoxContainer/ConfirmSignUpPanel_Code_Input")
+confirm_sign_up_confirm = NodePath("VBoxContainer/TabContainer/ConfirmSignUpPanel/MarginContainer/ConfirmSignUpPanel_Confirm")
+forgot_password_username = NodePath("VBoxContainer/TabContainer/ForgotPasswordPanel/MarginContainer2/VBoxContainer/HBoxContainer/ForgotPasswordPanel_Username_Input")
+forgot_password_confirm = NodePath("VBoxContainer/TabContainer/ForgotPasswordPanel/MarginContainer/ForgotPasswordPanel_ForgetPassword")
+confirm_forgot_password_code = NodePath("VBoxContainer/TabContainer/ConfirmForgotPasswordPanel/MarginContainer2/VBoxContainer/HBoxContainer/ConfirmForgotPasswordPanel_Code_Input")
+confirm_forgot_password_password = NodePath("VBoxContainer/TabContainer/ConfirmForgotPasswordPanel/MarginContainer2/VBoxContainer/HBoxContainer2/ConfirmForgotPassword_Password_Input")
+confirm_forgot_password_visibility_switch = NodePath("VBoxContainer/TabContainer/ConfirmForgotPasswordPanel/MarginContainer2/VBoxContainer/HBoxContainer2/ConfirmForgotPassword_Password_Visibility_Switch")
+confirm_forgot_password_confirm = NodePath("VBoxContainer/TabContainer/ConfirmForgotPasswordPanel/MarginContainer/ConfirmForgotPasswordPanel_Confirm")
+mfa_code = NodePath("VBoxContainer/TabContainer/MFAPanel/MarginContainer2/VBoxContainer/HBoxContainer/MFAPanel_Code_Input")
+mfa_confirm = NodePath("VBoxContainer/TabContainer/MFAPanel/MarginContainer/MFAPanel_Login")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=246444321]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -96.0
+offset_top = -82.0
+offset_right = 96.0
+offset_bottom = 82.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+
+[node name="TabContainer" type="TabContainer" parent="VBoxContainer" unique_id=1629344105]
+layout_mode = 2
+size_flags_horizontal = 4
+current_tab = 1
+tabs_visible = false
+tab_0/hidden = true
+tab_1/hidden = true
+tab_2/hidden = true
+tab_3/hidden = true
+tab_4/hidden = true
+tab_5/hidden = true
+
+[node name="LoginPanel" type="VBoxContainer" parent="VBoxContainer/TabContainer" unique_id=1505575255]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 4
+metadata/_tab_index = 0
+
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer/TabContainer/LoginPanel" unique_id=728117318]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/LoginPanel/MarginContainer3" unique_id=1271158096]
+layout_mode = 2
+text = "Login"
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/TabContainer/LoginPanel" unique_id=897572205]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/LoginPanel/MarginContainer2" unique_id=898941132]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/LoginPanel/MarginContainer2/VBoxContainer" unique_id=1624548554]
+layout_mode = 2
+
+[node name="LoginPanel_Username_Input" type="LineEdit" parent="VBoxContainer/TabContainer/LoginPanel/MarginContainer2/VBoxContainer/HBoxContainer" unique_id=1386937116]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "username"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/TabContainer/LoginPanel/MarginContainer2/VBoxContainer" unique_id=1133816493]
+layout_mode = 2
+
+[node name="LoginPanel_Password_Input" type="LineEdit" parent="VBoxContainer/TabContainer/LoginPanel/MarginContainer2/VBoxContainer/HBoxContainer2" unique_id=1174541133]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "password"
+secret = true
+
+[node name="LoginPanel_Password_Visibility_Switch" type="CheckButton" parent="VBoxContainer/TabContainer/LoginPanel/MarginContainer2/VBoxContainer/HBoxContainer2" unique_id=914007550]
+material = SubResource("ShaderMaterial_ac4cj")
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_constants/icon_max_width = 20
+theme_override_icons/checked = ExtResource("1_ltha6")
+theme_override_icons/unchecked = ExtResource("2_42sg8")
+icon_alignment = 1
+
+[node name="MarginContainer4" type="MarginContainer" parent="VBoxContainer/TabContainer/LoginPanel" unique_id=1770753040]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/LoginPanel/MarginContainer4" unique_id=2044045230]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="VBoxContainer/TabContainer/LoginPanel/MarginContainer4/HBoxContainer" unique_id=1131201970]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LoginPanel_Navigate_ForgetPassword" type="Button" parent="VBoxContainer/TabContainer/LoginPanel/MarginContainer4/HBoxContainer" unique_id=459074440]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 5
+text = "forgot password?"
+flat = true
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/LoginPanel/MarginContainer4/HBoxContainer" unique_id=119131040]
+layout_mode = 2
+theme_override_font_sizes/font_size = 5
+text = "/"
+
+[node name="LoginPanel_Navigate_SignUp" type="Button" parent="VBoxContainer/TabContainer/LoginPanel/MarginContainer4/HBoxContainer" unique_id=1129573245]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 5
+text = "don't have an account?"
+flat = true
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/TabContainer/LoginPanel" unique_id=1565085707]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="LoginPanel_Login" type="Button" parent="VBoxContainer/TabContainer/LoginPanel/MarginContainer" unique_id=2013753887]
+layout_mode = 2
+disabled = true
+text = "Login"
+
+[node name="SignUpPanel" type="VBoxContainer" parent="VBoxContainer/TabContainer" unique_id=767090125]
+layout_mode = 2
+theme_override_constants/separation = 4
+metadata/_tab_index = 1
+
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer/TabContainer/SignUpPanel" unique_id=1418034380]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/SignUpPanel/MarginContainer3" unique_id=1855281200]
+layout_mode = 2
+text = "Sign Up"
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/TabContainer/SignUpPanel" unique_id=859815813]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/SignUpPanel/MarginContainer2" unique_id=713526387]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/SignUpPanel/MarginContainer2/VBoxContainer" unique_id=317757300]
+layout_mode = 2
+
+[node name="SignUpPanel_Username_Input" type="LineEdit" parent="VBoxContainer/TabContainer/SignUpPanel/MarginContainer2/VBoxContainer/HBoxContainer" unique_id=1708990290]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "username"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/TabContainer/SignUpPanel/MarginContainer2/VBoxContainer" unique_id=127503278]
+layout_mode = 2
+
+[node name="SignUpPanel_Password_Input" type="LineEdit" parent="VBoxContainer/TabContainer/SignUpPanel/MarginContainer2/VBoxContainer/HBoxContainer2" unique_id=1090590542]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "password"
+secret = true
+
+[node name="SignUpPanel_Password_Visibility_Switch" type="CheckButton" parent="VBoxContainer/TabContainer/SignUpPanel/MarginContainer2/VBoxContainer/HBoxContainer2" unique_id=28644720]
+material = SubResource("ShaderMaterial_yyolg")
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_constants/icon_max_width = 20
+theme_override_icons/checked = ExtResource("1_ltha6")
+theme_override_icons/unchecked = ExtResource("2_42sg8")
+icon_alignment = 1
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/TabContainer/SignUpPanel/MarginContainer2/VBoxContainer" unique_id=2124034709]
+layout_mode = 2
+
+[node name="SignUpPanel_Email_Input" type="LineEdit" parent="VBoxContainer/TabContainer/SignUpPanel/MarginContainer2/VBoxContainer/HBoxContainer3" unique_id=412434513]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "email"
+
+[node name="MarginContainer4" type="MarginContainer" parent="VBoxContainer/TabContainer/SignUpPanel" unique_id=1919479109]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/SignUpPanel/MarginContainer4" unique_id=1117350886]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="VBoxContainer/TabContainer/SignUpPanel/MarginContainer4/HBoxContainer" unique_id=744454551]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SignUpPanel_Navigate_Login" type="Button" parent="VBoxContainer/TabContainer/SignUpPanel/MarginContainer4/HBoxContainer" unique_id=973058905]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 5
+text = "already have an account?"
+flat = true
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/TabContainer/SignUpPanel" unique_id=1229940665]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="SignUpPanel_SignUp" type="Button" parent="VBoxContainer/TabContainer/SignUpPanel/MarginContainer" unique_id=2093254248]
+layout_mode = 2
+disabled = true
+text = "Sign Up"
+
+[node name="ConfirmSignUpPanel" type="VBoxContainer" parent="VBoxContainer/TabContainer" unique_id=1943898069]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 4
+metadata/_tab_index = 2
+
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer/TabContainer/ConfirmSignUpPanel" unique_id=826726312]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/ConfirmSignUpPanel/MarginContainer3" unique_id=272325339]
+layout_mode = 2
+
+[node name="ConfirmSignUpPanel_Back" type="Button" parent="VBoxContainer/TabContainer/ConfirmSignUpPanel/MarginContainer3/HBoxContainer" unique_id=664710696]
+material = SubResource("ShaderMaterial_hkjhb")
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_constants/icon_max_width = 10
+icon = ExtResource("4_ac4cj")
+flat = true
+icon_alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/ConfirmSignUpPanel/MarginContainer3/HBoxContainer" unique_id=772792431]
+layout_mode = 2
+text = "Confirm Sign Up"
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/TabContainer/ConfirmSignUpPanel" unique_id=477253206]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/ConfirmSignUpPanel/MarginContainer2" unique_id=1233665018]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/ConfirmSignUpPanel/MarginContainer2/VBoxContainer" unique_id=207653623]
+layout_mode = 2
+
+[node name="ConfirmSignUpPanel_Code_Input" type="LineEdit" parent="VBoxContainer/TabContainer/ConfirmSignUpPanel/MarginContainer2/VBoxContainer/HBoxContainer" unique_id=540512423]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "code"
+
+[node name="ConfirmSignUpPanel_Resend" type="Button" parent="VBoxContainer/TabContainer/ConfirmSignUpPanel/MarginContainer2/VBoxContainer/HBoxContainer" unique_id=988684196]
+layout_mode = 2
+text = "Resend"
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/TabContainer/ConfirmSignUpPanel" unique_id=276990246]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="ConfirmSignUpPanel_Confirm" type="Button" parent="VBoxContainer/TabContainer/ConfirmSignUpPanel/MarginContainer" unique_id=1379327087]
+layout_mode = 2
+disabled = true
+text = "Confirm"
+
+[node name="ForgotPasswordPanel" type="VBoxContainer" parent="VBoxContainer/TabContainer" unique_id=1167388056]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 4
+metadata/_tab_index = 3
+
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer/TabContainer/ForgotPasswordPanel" unique_id=1559552222]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/ForgotPasswordPanel/MarginContainer3" unique_id=1078782052]
+layout_mode = 2
+text = "Forget Password"
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/TabContainer/ForgotPasswordPanel" unique_id=980338355]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/ForgotPasswordPanel/MarginContainer2" unique_id=1649665660]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/ForgotPasswordPanel/MarginContainer2/VBoxContainer" unique_id=1270681402]
+layout_mode = 2
+
+[node name="ForgotPasswordPanel_Username_Input" type="LineEdit" parent="VBoxContainer/TabContainer/ForgotPasswordPanel/MarginContainer2/VBoxContainer/HBoxContainer" unique_id=749005950]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "username"
+
+[node name="MarginContainer4" type="MarginContainer" parent="VBoxContainer/TabContainer/ForgotPasswordPanel" unique_id=1175711102]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/ForgotPasswordPanel/MarginContainer4" unique_id=1407599742]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="VBoxContainer/TabContainer/ForgotPasswordPanel/MarginContainer4/HBoxContainer" unique_id=643374572]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ForgotPasswordPanel_Navigate_Login" type="Button" parent="VBoxContainer/TabContainer/ForgotPasswordPanel/MarginContainer4/HBoxContainer" unique_id=1732840145]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_font_sizes/font_size = 5
+text = "remember your password?"
+flat = true
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/TabContainer/ForgotPasswordPanel" unique_id=1145932324]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="ForgotPasswordPanel_ForgetPassword" type="Button" parent="VBoxContainer/TabContainer/ForgotPasswordPanel/MarginContainer" unique_id=1613597557]
+layout_mode = 2
+disabled = true
+text = "Forget Password"
+
+[node name="ConfirmForgotPasswordPanel" type="VBoxContainer" parent="VBoxContainer/TabContainer" unique_id=804768869]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 4
+metadata/_tab_index = 4
+
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer/TabContainer/ConfirmForgotPasswordPanel" unique_id=1224669060]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/ConfirmForgotPasswordPanel/MarginContainer3" unique_id=1987382099]
+layout_mode = 2
+
+[node name="ConfirmForgotPasswordPanel_Back" type="Button" parent="VBoxContainer/TabContainer/ConfirmForgotPasswordPanel/MarginContainer3/HBoxContainer" unique_id=441640783]
+material = SubResource("ShaderMaterial_hkjhb")
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_constants/icon_max_width = 10
+icon = ExtResource("4_ac4cj")
+flat = true
+icon_alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/ConfirmForgotPasswordPanel/MarginContainer3/HBoxContainer" unique_id=798707433]
+layout_mode = 2
+text = "Confirm Forget Password"
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/TabContainer/ConfirmForgotPasswordPanel" unique_id=1866781892]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/ConfirmForgotPasswordPanel/MarginContainer2" unique_id=2014864450]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/ConfirmForgotPasswordPanel/MarginContainer2/VBoxContainer" unique_id=1488096094]
+layout_mode = 2
+
+[node name="ConfirmForgotPasswordPanel_Code_Input" type="LineEdit" parent="VBoxContainer/TabContainer/ConfirmForgotPasswordPanel/MarginContainer2/VBoxContainer/HBoxContainer" unique_id=377667784]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "code"
+
+[node name="ConfirmForgotPassword_Resend" type="Button" parent="VBoxContainer/TabContainer/ConfirmForgotPasswordPanel/MarginContainer2/VBoxContainer/HBoxContainer" unique_id=1789549444]
+layout_mode = 2
+text = "Resend"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/TabContainer/ConfirmForgotPasswordPanel/MarginContainer2/VBoxContainer" unique_id=87416144]
+layout_mode = 2
+
+[node name="ConfirmForgotPassword_Password_Input" type="LineEdit" parent="VBoxContainer/TabContainer/ConfirmForgotPasswordPanel/MarginContainer2/VBoxContainer/HBoxContainer2" unique_id=121259997]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "password"
+secret = true
+
+[node name="ConfirmForgotPassword_Password_Visibility_Switch" type="CheckButton" parent="VBoxContainer/TabContainer/ConfirmForgotPasswordPanel/MarginContainer2/VBoxContainer/HBoxContainer2" unique_id=2011921625]
+material = SubResource("ShaderMaterial_ac4cj")
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_constants/icon_max_width = 20
+theme_override_icons/checked = ExtResource("1_ltha6")
+theme_override_icons/unchecked = ExtResource("2_42sg8")
+icon_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/TabContainer/ConfirmForgotPasswordPanel" unique_id=1926379798]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="ConfirmForgotPasswordPanel_Confirm" type="Button" parent="VBoxContainer/TabContainer/ConfirmForgotPasswordPanel/MarginContainer" unique_id=798883136]
+layout_mode = 2
+disabled = true
+text = "Confirm"
+
+[node name="MFAPanel" type="VBoxContainer" parent="VBoxContainer/TabContainer" unique_id=870825610]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 4
+metadata/_tab_index = 5
+
+[node name="MarginContainer3" type="MarginContainer" parent="VBoxContainer/TabContainer/MFAPanel" unique_id=1448176430]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/MFAPanel/MarginContainer3" unique_id=384774612]
+layout_mode = 2
+
+[node name="MFAPanel_Back" type="Button" parent="VBoxContainer/TabContainer/MFAPanel/MarginContainer3/HBoxContainer" unique_id=70495577]
+material = SubResource("ShaderMaterial_hkjhb")
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_constants/icon_max_width = 10
+icon = ExtResource("4_ac4cj")
+flat = true
+icon_alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer/TabContainer/MFAPanel/MarginContainer3/HBoxContainer" unique_id=1572590070]
+layout_mode = 2
+text = "MFA"
+
+[node name="MarginContainer2" type="MarginContainer" parent="VBoxContainer/TabContainer/MFAPanel" unique_id=642887368]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/TabContainer/MFAPanel/MarginContainer2" unique_id=1969461284]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TabContainer/MFAPanel/MarginContainer2/VBoxContainer" unique_id=1465064276]
+layout_mode = 2
+
+[node name="MFAPanel_Code_Input" type="LineEdit" parent="VBoxContainer/TabContainer/MFAPanel/MarginContainer2/VBoxContainer/HBoxContainer" unique_id=133607237]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "code"
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/TabContainer/MFAPanel" unique_id=1320433975]
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="MFAPanel_Login" type="Button" parent="VBoxContainer/TabContainer/MFAPanel/MarginContainer" unique_id=926366665]
+layout_mode = 2
+disabled = true
+text = "Login"
+
+[node name="ErrorDisplay" type="Label" parent="VBoxContainer" unique_id=2033515429]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+autowrap_mode = 3
+script = ExtResource("6_mqrdc")
+
+[connection signal="tab_changed" from="VBoxContainer/TabContainer" to="VBoxContainer/ErrorDisplay" method="_on_tab_container_tab_changed"]
+[connection signal="text_changed" from="VBoxContainer/TabContainer/LoginPanel/MarginContainer2/VBoxContainer/HBoxContainer/LoginPanel_Username_Input" to="." method="_on_login_panel_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/TabContainer/LoginPanel/MarginContainer2/VBoxContainer/HBoxContainer2/LoginPanel_Password_Input" to="." method="_on_login_panel_input_text_changed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/LoginPanel/MarginContainer2/VBoxContainer/HBoxContainer2/LoginPanel_Password_Visibility_Switch" to="." method="_on_login_panel_password_visibility_switch_pressed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/LoginPanel/MarginContainer4/HBoxContainer/LoginPanel_Navigate_ForgetPassword" to="." method="_on_login_panel_navigate_forgot_password_pressed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/LoginPanel/MarginContainer4/HBoxContainer/LoginPanel_Navigate_SignUp" to="." method="_on_login_panel_navigate_sign_up_pressed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/LoginPanel/MarginContainer/LoginPanel_Login" to="." method="_on_login_panel_login_pressed"]
+[connection signal="text_changed" from="VBoxContainer/TabContainer/SignUpPanel/MarginContainer2/VBoxContainer/HBoxContainer/SignUpPanel_Username_Input" to="." method="_on_sign_up_panel_input_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/TabContainer/SignUpPanel/MarginContainer2/VBoxContainer/HBoxContainer2/SignUpPanel_Password_Input" to="." method="_on_sign_up_panel_input_text_changed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/SignUpPanel/MarginContainer2/VBoxContainer/HBoxContainer2/SignUpPanel_Password_Visibility_Switch" to="." method="_on_sign_up_panel_password_visibility_switch_pressed"]
+[connection signal="text_changed" from="VBoxContainer/TabContainer/SignUpPanel/MarginContainer2/VBoxContainer/HBoxContainer3/SignUpPanel_Email_Input" to="." method="_on_sign_up_panel_input_text_changed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/SignUpPanel/MarginContainer4/HBoxContainer/SignUpPanel_Navigate_Login" to="." method="_on_sign_up_panel_navigate_login_pressed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/SignUpPanel/MarginContainer/SignUpPanel_SignUp" to="." method="_on_sign_up_panel_sign_up_pressed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/ConfirmSignUpPanel/MarginContainer3/HBoxContainer/ConfirmSignUpPanel_Back" to="." method="_on_confirm_sign_up_panel_back_pressed"]
+[connection signal="text_changed" from="VBoxContainer/TabContainer/ConfirmSignUpPanel/MarginContainer2/VBoxContainer/HBoxContainer/ConfirmSignUpPanel_Code_Input" to="." method="_on_confirm_sign_up_panel_input_text_changed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/ConfirmSignUpPanel/MarginContainer2/VBoxContainer/HBoxContainer/ConfirmSignUpPanel_Resend" to="." method="_on_confirm_sign_up_panel_resend_pressed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/ConfirmSignUpPanel/MarginContainer/ConfirmSignUpPanel_Confirm" to="." method="_on_confirm_sign_up_panel_confirm_pressed"]
+[connection signal="text_changed" from="VBoxContainer/TabContainer/ForgotPasswordPanel/MarginContainer2/VBoxContainer/HBoxContainer/ForgotPasswordPanel_Username_Input" to="." method="_on_forgot_password_panel_input_text_changed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/ForgotPasswordPanel/MarginContainer4/HBoxContainer/ForgotPasswordPanel_Navigate_Login" to="." method="_on_forgot_password_panel_navigate_login_pressed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/ForgotPasswordPanel/MarginContainer/ForgotPasswordPanel_ForgetPassword" to="." method="_on_forgot_password_panel_forgot_password_pressed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/ConfirmForgotPasswordPanel/MarginContainer3/HBoxContainer/ConfirmForgotPasswordPanel_Back" to="." method="_on_confirm_forgot_password_panel_back_pressed"]
+[connection signal="text_changed" from="VBoxContainer/TabContainer/ConfirmForgotPasswordPanel/MarginContainer2/VBoxContainer/HBoxContainer/ConfirmForgotPasswordPanel_Code_Input" to="." method="_on_confirm_forgot_password_panel_input_text_changed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/ConfirmForgotPasswordPanel/MarginContainer2/VBoxContainer/HBoxContainer/ConfirmForgotPassword_Resend" to="." method="_on_confirm_forgot_password_resend_pressed"]
+[connection signal="text_changed" from="VBoxContainer/TabContainer/ConfirmForgotPasswordPanel/MarginContainer2/VBoxContainer/HBoxContainer2/ConfirmForgotPassword_Password_Input" to="." method="_on_confirm_forgot_password_panel_input_text_changed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/ConfirmForgotPasswordPanel/MarginContainer2/VBoxContainer/HBoxContainer2/ConfirmForgotPassword_Password_Visibility_Switch" to="." method="_on_confirm_forgot_password_password_visibility_switch_pressed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/ConfirmForgotPasswordPanel/MarginContainer/ConfirmForgotPasswordPanel_Confirm" to="." method="_on_confirm_forgot_password_panel_confirm_pressed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/MFAPanel/MarginContainer3/HBoxContainer/MFAPanel_Back" to="." method="_on_mfa_panel_back_pressed"]
+[connection signal="text_changed" from="VBoxContainer/TabContainer/MFAPanel/MarginContainer2/VBoxContainer/HBoxContainer/MFAPanel_Code_Input" to="." method="_on_mfa_panel_input_text_changed"]
+[connection signal="pressed" from="VBoxContainer/TabContainer/MFAPanel/MarginContainer/MFAPanel_Login" to="." method="_on_mfa_panel_login_pressed"]

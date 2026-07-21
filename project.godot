@@ -25,17 +25,26 @@ driver/mix_rate=48000
 [autoload]
 
 EmbeddedVoiceChatPluginModule="*uid://bs4nv7gs5ht4g"
+AWSModule="*uid://bpr1vju44my21"
+AmazonGameLiftServerModule="*uid://do7jdwanipoig"
 
 [debug]
 
+file_logging/enable_file_logging.pc=false
 gdscript/warnings/directory_rules={
 "res://addons": 0,
 "res://addons/embedded_voice_chat": 1
 }
+file_logging/amazon_game_lift_server_log_path="logs/{project_name}_log_{index}.{ext}"
+file_logging/amazon_game_lift_server_max_logs=20
+
+[display]
+
+window/stretch/mode="canvas_items"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/embedded_voice_chat/plugin.cfg")
+enabled=PackedStringArray("res://addons/amazon_game_lift_server/plugin.cfg", "res://addons/aws_cognito/plugin.cfg", "res://addons/aws_core/plugin.cfg", "res://addons/aws_gamelift/plugin.cfg", "res://addons/embedded_voice_chat/plugin.cfg")
 
 [global_group]
 

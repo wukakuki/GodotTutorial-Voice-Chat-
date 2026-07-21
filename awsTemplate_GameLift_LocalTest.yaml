@@ -1,0 +1,100 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: awsTutorial(GameLift part)
+Parameters:
+  ResourceNamePrefix:
+    Description: Prefix of resource name
+    Default: awstutorial
+    Type: String
+Resources:
+  awsTutorialLocation:
+    Type: AWS::GameLift::Location
+    Properties:
+      LocationName: !Join
+        - ''
+        - - custom-
+          - !Ref ResourceNamePrefix
+          - -GameLift-Location
+      Tags:
+        - Key: Usage
+          Value: Youtube Streamer
+  awsTutorialFleet:
+    Type: AWS::GameLift::Fleet
+    DependsOn: awsTutorialLocation
+    Properties:
+      Name: !Join
+        - ''
+        - - !Ref ResourceNamePrefix
+          - _GameLift_Fleet
+      Description: awsTutorial Fleet
+      ComputeType: ANYWHERE
+      Locations:
+        - Location: !Join
+            - ''
+            - - custom-
+              - !Ref ResourceNamePrefix
+              - -GameLift-Location
+          LocationCapacity:
+            DesiredEC2Instances: 1
+            MaxSize: 1
+            MinSize: 0
+  awsTutorialAlias:
+    Type: AWS::GameLift::Alias
+    Properties:
+      Name: !Join
+        - ''
+        - - !Ref ResourceNamePrefix
+          - _Alias
+      Description: awsTutorial Alias
+      RoutingStrategy:
+        FleetId: !Ref awsTutorialFleet
+        Type: SIMPLE
+  awsTutorialGameSessionQueue:
+    Type: AWS::GameLift::GameSessionQueue
+    Properties:
+      Name: !Join
+        - ''
+        - - !Ref ResourceNamePrefix
+          - -Queue
+      Destinations:
+        - DestinationArn: !Sub "arn:aws:gamelift:${AWS::Region}:${AWS::AccountId}:alias/${awsTutorialAlias}"
+      PlayerLatencyPolicies:
+        - MaximumIndividualPlayerLatencyMilliseconds: 500
+          PolicyDurationSeconds: 30
+      PriorityConfiguration:
+        PriorityOrder: 
+          - LATENCY
+          - COST
+      TimeoutInSeconds: 60
+      Tags:
+        - Key: Usage
+          Value: Youtube Streamer
+Metadata:
+  AWS::Composer::Groups:
+    Group1:
+      Label: GameLift
+      Members:
+        - awsTutorialGameLiftRole
+        - awsTutorialFleet
+        - awsTutorialAlias
+Outputs:
+  awsTutorialFleetId:
+    Description: GameLift Fleet ID
+    Value: !Ref awsTutorialFleet
+    Export:
+      Name: !Sub 'awsTutorialFleetId'
+  awsTutorialAliasId:
+    Description: GameLift Alias ID
+    Value: !Ref awsTutorialAlias
+    Export:
+      Name: !Sub 'awsTutorialAlias'
+  awsTutorialGameSessionQueueName:
+    Description: GameLift Game Session Queue Name
+    Value: !GetAtt awsTutorialGameSessionQueue.Name
+    Export:
+      Name: !Sub 'awsTutorialGameSessionQueueName'
+  awsTutorialGameSessionQueueArn:
+    Description: GameLift Game Session Queue Arn
+    Value: !GetAtt awsTutorialGameSessionQueue.Arn
+    Export:
+      Name: !Sub 'awsTutorialGameSessionQueueArn'
