@@ -689,7 +689,7 @@ func _on_confirm_forgot_password_resend_pressed():
 func _on_confirm_forgot_password_panel_back_pressed():
 	tab_container.current_tab = 3
 	if has_user_signal("confirm_forgot_password"):
-		var error: Error = emit_signal("confirm_forgot_password")
+		var error: Error = emit_signal("confirm_forgot_password", "")
 		if error != Error.OK:
 			game_instance.notification.emit(game_instance.NotificationLevel.Error, "emit confirm_forgot_password signal failed: %d" % error)
 
