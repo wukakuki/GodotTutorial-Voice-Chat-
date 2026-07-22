@@ -9,12 +9,18 @@ script = ExtResource("1_o5qli")
 default_client_map = ExtResource("3_sugp2")
 default_server_map = ExtResource("2_0wfyh")
 cognito_region = "ap-northeast-2"
-cognito_client_id = "khbunp4mf66o2otq60g9eft1h"
-cognito_client_secret_key = "1s8ivtgahlaq24s9196e415avvmc7m9mtoqhuka8hu2ehl6nbbmr"
-cognito_user_pool_id = "ap-northeast-2_WOMUxvwlL"
-cognito_identity_pool_id = "ap-northeast-2:c1e3e508-d3fa-45e0-8489-8b5736a372f1"
+cognito_client_id = "jh93ktjcrp4r58kin45ct183"
+cognito_client_secret_key = "18nsf3fh9em51chlaa8m26p618fou6o8mojqbk9io3poh3e8f6gs"
+cognito_user_pool_id = "ap-northeast-2_5GS4D6Uf3"
+cognito_identity_pool_id = "ap-northeast-2:b86a9225-a6a5-469b-b1b8-3ee07204093f"
 gamelift_region = "ap-northeast-2"
-alias_id = "alias-68ffdeca-bfb1-4ea7-90b9-452540b472e8"
+alias_id = "alias-87afa3b4-6325-41be-a768-a4a17d3a0935"
+location = "custom-awstutorial-GameLift-Location"
+game_server_auth_token = "09d54989-001f-4ca8-9f24-1cddbdaf9042"
+game_server_region = "ap-northeast-2"
+game_server_fleet_id = "fleet-d223e76d-cea8-421a-a884-b6d8e59df0f3"
+game_server_host_id = "testGodot"
+game_server_web_socket_url = "wss://ap-northeast-2.api.amazongamelift.com"
 
 [node name="Level" type="Node3D" parent="." unique_id=91129953]
 

@@ -32,6 +32,8 @@ var is_local_player: bool = false
 		$PlayerInput.set_multiplayer_authority(player_id)
 		$RPCGroup.owning_client_id = player_id
 		
+@export var player_session_id: String
+		
 var master_low_pass_filter: AudioEffectLowPassFilter
 var master_reverb: AudioEffectReverb
 var master_phaser: AudioEffectPhaser
